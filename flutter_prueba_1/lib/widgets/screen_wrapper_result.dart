@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
 
-class ScreenWrapper extends StatelessWidget {
+class ScreenWrapperResult extends StatelessWidget {
   // ignore: use_key_in_widget_constructors
-  const ScreenWrapper({
+  const ScreenWrapperResult({
     Key? key,
     required this.headerColor,
     required this.headerWidget,
     required this.bodyWidget,
-    required this.today,
-    required this.nit,
-    required this.name,
+
   });
   final Color headerColor;
   final Widget headerWidget;
   final Widget bodyWidget;
-  final String today;
-  final String nit;
-  final String name;
+
   @override
   Widget build(BuildContext context) {
     return Container(

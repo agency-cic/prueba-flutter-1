@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 class Register { 
 
   final String name;
-  final int nit;
+  final String nit;
   final String visitday;
   final XFile? image;
   final String address;

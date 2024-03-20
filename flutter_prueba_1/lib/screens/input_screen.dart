@@ -13,7 +13,12 @@ import '../models/register_model.dart';
 
 class InputScreen extends StatefulWidget {
    
-  const InputScreen({Key? key}) : super(key: key);
+ final String today;
+ final String nit;
+ final String name;
+
+ // Constructor que acepta los datos
+ const InputScreen(this.today, this.nit, this.name, {super.key});
 
   @override
   State<InputScreen> createState() => _InputScreenState();
@@ -53,10 +58,13 @@ class _InputScreenState extends State<InputScreen> {
         
 
       ),
-      body: const ScreenWrapper(
-          headerColor:  Color.fromARGB(255, 255, 255, 255),
-          headerWidget: HeaderText(),
-          bodyWidget: Formulario(),
+      body: ScreenWrapper(
+          headerColor:  const Color.fromARGB(255, 255, 255, 255),
+          headerWidget: const HeaderText(),
+          bodyWidget: Formulario(today: widget.today, nit: widget.nit, name: widget.name),
+          today: widget.today,
+          nit: widget.nit,
+          name: widget.name,
         )
  );
   }
@@ -78,9 +86,18 @@ class HeaderText extends StatelessWidget {
 }
 
 class Formulario extends StatefulWidget {
-  
+final String today;
+ final String nit;
+ final String name;
 
-  const Formulario({Key? key}) : super(key: key);
+ // Constructor que acepta los datos
+ const Formulario({
+    Key? key,
+    required this.today,
+    required this.nit,
+    required this.name,
+ }) : super(key: key);
+
 
   @override
   State<Formulario> createState() => _FormularioState();
@@ -94,6 +111,8 @@ LatLng _markerPosition = const LatLng(0, 0);
   final TextEditingController _cellphoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   String _foundAddress = '';
+  final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
+ final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
 
 
 
@@ -140,9 +159,9 @@ Future<void> _searchPlace(String address) async {
  void _addRegister() {
 
       Register newRegister = Register(
-        name: "Nombre",
-        nit: 123456789,
-        visitday: "2023-04-01",
+        name: widget.name,
+        nit: widget.nit,
+        visitday: widget.today,
         image: _image,
         address:  _foundAddress,
         email: _emailController.text,
@@ -235,7 +254,7 @@ Future<dynamic> options(BuildContext context) {
   @override
   Widget build(BuildContext context) {
 
-    final formKey = GlobalKey<FormState>();
+   
     
   
     
@@ -323,19 +342,28 @@ Future<dynamic> options(BuildContext context) {
   ),
   ),
 
-  Form(
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      child: TextField(
-    controller: _addressController,
-      decoration: InputDecorations.authInputDecoration(
-              hintText: 'Cr # () - () Barrio, Ciudad',
-              labelText: 'Buscar dirección *',
-              prefixIcon: Icons.place_outlined,
-              
+ Form(
+              key: _formKey1,
+              child: Column(
+                children: [
+                 TextFormField(
+                    controller: _addressController,
+                    decoration: InputDecorations.authInputDecoration(
+                      hintText: 'Cr # () - () Barrio, Ciudad',
+                      labelText: 'Buscar dirección *',
+                      prefixIcon: Icons.place_outlined,
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, ingrese una dirección';
+                      }
+                      return null;
+                    },
+                 ),
+                 // Otros campos de texto para el primer formulario
+                ],
+              ),
             ),
-            
-  ),
-  ),
 
     const SizedBox(height: 15),
 
@@ -352,7 +380,7 @@ Future<dynamic> options(BuildContext context) {
        const Text('Información de contacto:', style: TextStyle(color: Color.fromARGB(255, 241, 111, 90), fontSize: 15),),
 
        Form(
-        key: formKey,
+        key: _formKey2,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
         children: [
@@ -421,12 +449,12 @@ Future<dynamic> options(BuildContext context) {
                   onPressed: (){
 
 
-                   if(_image !=null && _foundAddress.isNotEmpty && formKey.currentState!.validate()){
+                   if(_image !=null && _formKey1.currentState!.validate() &&  _formKey2.currentState!.validate()){
 
                       _addRegister();
 
                        
-                       Navigator.push(
+                       Navigator.pushReplacement(
                        context,
                        MaterialPageRoute(builder: (context) => const ResultScreen()),
                        );

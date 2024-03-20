@@ -1,9 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_prueba_1/models/register_model.dart';
 import 'package:flutter_prueba_1/providers/register_provider.dart';
-import 'package:flutter_prueba_1/widgets/screen_wrapper.dart';
+import 'package:flutter_prueba_1/screens/home_screen.dart';
+import 'package:flutter_prueba_1/widgets/screen_wrapper_result.dart';
 import 'package:provider/provider.dart';
 
 class ResultScreen extends StatelessWidget {
@@ -45,7 +45,21 @@ class ResultScreen extends StatelessWidget {
         
 
       ),
-      body: ScreenWrapper(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+        },
+        heroTag: null,
+        backgroundColor: const Color.fromARGB(255, 241, 111, 90),
+        child: const Icon(
+          Icons.house_rounded, color: Colors.white
+        ),
+      ),
+      body: ScreenWrapperResult(
         headerColor: const Color.fromARGB(130, 241, 111, 90),
         headerWidget: const HeaderText(),
         bodyWidget: Registros(registerProvider: registerProvider) ,
@@ -125,6 +139,7 @@ class ListCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          
           // Nombre del comercio
           _buildCardItem(
             title: 'Nombre del comercio',
@@ -136,6 +151,7 @@ class ListCard extends StatelessWidget {
             value: individualRegister.nit.toString(),
           ),
           // Agendamiento de cita
+          
           _buildCardItem(
             title: 'Agendamiento de cita',
             value: individualRegister.visitday,
@@ -165,6 +181,7 @@ class ListCard extends StatelessWidget {
                 width: 200,
               ),
             ),
+    
         ],
       ),
     );

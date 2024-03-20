@@ -127,7 +127,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       );
                     }else{
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const InputScreen()));
+                      final String formattedToday = DateFormat('dd/MM/yyyy').format(today);
+                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => InputScreen(formattedToday, nitController.text, nameController.text)));
                     }
                   }
                 }
@@ -135,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
               }, 
               child: const Padding(
                     padding: EdgeInsets.only(left: 50, right: 50, bottom: 10, top: 10),
-                    child:  Text('Enviar', style: TextStyle(fontSize: 15, color: Colors.white)),
+                    child:  Text('Continuar', style: TextStyle(fontSize: 15, color: Colors.white)),
                   )
           )
           ]

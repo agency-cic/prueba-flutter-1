@@ -92,10 +92,9 @@ LatLng _markerPosition = const LatLng(0, 0);
  XFile? _image;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _cellphoneController = TextEditingController();
-String _placename = '';
-String _locality = '';
-String _postalCode = '';
-String _country = '';
+  final TextEditingController _addressController = TextEditingController();
+  String _foundAddress = '';
+
 
 
 
@@ -111,32 +110,33 @@ String _country = '';
     });
  }
 
+ 
+
  final LatLng _center = const LatLng(4.5709, -74.2973); //coordenadas de Colombia
 
  void _onMapCreated(GoogleMapController controller) {
+  
  }
-
-Future<void> _getPlace(LatLng position) async {
+Future<void> _searchPlace(String address) async {
  try {
-    List<Placemark> placemarks = await placemarkFromCoordinates(
-      position.latitude,
-      position.longitude,
-    );
-
-    Placemark place = placemarks[0];
-
-    setState(() {
-      _placename = place.name ?? '';
-      _locality = place.locality ?? '';
-      _postalCode = place.postalCode ?? '';
-      _country = place.country ?? '';
-      _markerPosition = position; // Actualiza la ubicación del marcador
-    });
+    List<Location> locations = await locationFromAddress(address);
+    if (locations.isNotEmpty) {
+      Location location = locations.first;
+      setState(() {
+        _markerPosition = LatLng(location.latitude, location.longitude);
+        // Actualiza la dirección encontrada
+        _foundAddress = address;
+      });
+    } else {
+      // ignore: avoid_print
+      print('No se encontró la dirección');
+    }
  } catch (e) {
     // ignore: avoid_print
     print(e);
  }
 }
+
  void _addRegister() {
 
       Register newRegister = Register(
@@ -144,7 +144,7 @@ Future<void> _getPlace(LatLng position) async {
         nit: 123456789,
         visitday: "2023-04-01",
         image: _image,
-        address: "Dirección:$_placename, Localidad:$_locality, País:$_country",
+        address:  _foundAddress,
         email: _emailController.text,
         cellphone: _cellphoneController.text, 
       );
@@ -236,6 +236,7 @@ Future<dynamic> options(BuildContext context) {
   Widget build(BuildContext context) {
 
     final formKey = GlobalKey<FormState>();
+    
   
     
     return SingleChildScrollView(
@@ -303,65 +304,48 @@ Future<dynamic> options(BuildContext context) {
         const SizedBox(height: 15),
         
 
-   SizedBox(
- height: 400, 
- width: double.infinity, 
- child: GoogleMap(
-    onMapCreated: _onMapCreated,
-    initialCameraPosition: CameraPosition(
-      target: _center,
-      zoom: 11.0,
+    SizedBox(
+  height: 400, 
+  width: double.infinity, 
+  child: GoogleMap(
+  onMapCreated: _onMapCreated,
+   initialCameraPosition: CameraPosition(
+    target: _center,
+    zoom: 5,
+  ),
+  markers: {
+    Marker(
+      markerId: const MarkerId('selectedLocation'),
+      position: _markerPosition,
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
     ),
-    onTap: _getPlace,
-    markers: {
-      Marker(
-        markerId: const MarkerId('selectedLocation'),
-        position: _markerPosition,
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-      ),
-    },
- ),
-),
+  },
+  ),
+  ),
 
+  Form(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      child: TextField(
+    controller: _addressController,
+      decoration: InputDecorations.authInputDecoration(
+              hintText: 'Cr # () - () Barrio, Ciudad',
+              labelText: 'Buscar dirección *',
+              prefixIcon: Icons.place_outlined,
+              
+            ),
+            
+  ),
+  ),
 
     const SizedBox(height: 15),
 
-Row(
- children: [
-    const Text('Dirección:', style: TextStyle(fontWeight: FontWeight.bold)),
-    const SizedBox(width: 20),
-    Flexible(
-      child: Text(_placename),
-    ),
- ],
+  ElevatedButton(
+    onPressed: () {
+    _searchPlace(_addressController.text);
+    },
+ child: const Text('Buscar'),
 ),
-Row(
- children: [
-    const Text('Localidad:', style: TextStyle(fontWeight: FontWeight.bold)),
-    const SizedBox(width: 20),
-    Flexible(
-      child: Text(_locality),
-    ),
- ],
-),
-Row(
- children: [
-    const Text('Postal:', style: TextStyle(fontWeight: FontWeight.bold)),
-    const SizedBox(width: 20),
-    Flexible(
-      child: Text(_postalCode),
-    ),
- ],
-),
-Row(
- children: [
-    const Text('País:', style: TextStyle(fontWeight: FontWeight.bold)),
-    const SizedBox(width: 20),
-    Flexible(
-      child: Text(_country),
-    ),
- ],
-),
+
 
    const SizedBox(height: 30),
 
@@ -407,7 +391,7 @@ Row(
               labelText: 'Número de teléfono *',
               prefixIcon: Icons.call
             ),
-            // Realizamos la validación para que solo sean aceptados datos que luzcan como correo electrónicos
+            // Realizamos la validación para que solo sean aceptados datos que luzcan como números de teléfonos
 
               validator: (value) {
                 if (value != null && value.length == 10) return null;
@@ -437,7 +421,7 @@ Row(
                   onPressed: (){
 
 
-                   if(_image !=null && _placename.isNotEmpty && formKey.currentState!.validate()){
+                   if(_image !=null && _foundAddress.isNotEmpty && formKey.currentState!.validate()){
 
                       _addRegister();
 

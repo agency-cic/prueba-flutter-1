@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_prueba_1/providers/login_form_provider.dart';
+import 'package:flutter_prueba_1/providers/register_provider.dart';
 import 'package:provider/provider.dart';
 import 'screens/screens.dart';
 
@@ -19,8 +19,8 @@ class AppState extends StatelessWidget {
     return  MultiProvider(
       providers: [
 
-        
-        ChangeNotifierProvider(create: (_) => FormProvider()),
+      
+        ChangeNotifierProvider(create: (_) => RegisterProvider(),lazy: false),
 
   
       ],

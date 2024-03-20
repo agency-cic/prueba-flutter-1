@@ -1,26 +1,27 @@
-import 'dart:io';
+
+import 'package:image_picker/image_picker.dart';
 
 class Register { 
 
-  final String text;
-  final String timestamp;
-  final File? image;
-  final File? camera;
-  final String ubication;
+  final String name;
+  final int nit;
+  final String visitday;
+  final XFile? image;
+  final String address;
   final String email;
-  final int cellphone;
+  final String cellphone;
  
 
-  Register({required this.text, required this.timestamp, required this.image, required this.camera, required this. ubication, required this.email, required this.cellphone});
+  Register({required this.name, required this.nit, required this.visitday, required this.image, required this.address, required this.email, required this.cellphone});
   
 
   Map<String, dynamic> toMap() {
     return {
-      "text": text,
-      "time": timestamp,
+      "name": name,
+      "nit": nit,
+      "visitday": visitday,
       "image": image,
-      "camera": camera,
-      "ubication": ubication,
+      "address": address,
       "email": email,
       "cellphone": cellphone,
    

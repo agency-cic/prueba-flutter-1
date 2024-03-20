@@ -1,11 +1,14 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_prueba_1/providers/login_form_provider.dart';
+import 'package:flutter_prueba_1/providers/register_provider.dart';
+import 'package:flutter_prueba_1/screens/result_screen.dart';
 import 'package:flutter_prueba_1/ui/input_decorations.dart';
 import 'package:flutter_prueba_1/widgets/screen_wrapper.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import '../models/register_model.dart';
 
 
 class InputScreen extends StatefulWidget {
@@ -42,7 +45,7 @@ class _InputScreenState extends State<InputScreen> {
               //Programación de la imagen del logo
               image: const DecorationImage(
                 fit: BoxFit
-                    .scaleDown, // Ajusta la imagen para cubrir el contenedor
+                    .scaleDown,
                 image: AssetImage('assets/healthcare.png'), // Ruta de la imagen
               ),
             ),
@@ -84,15 +87,73 @@ class Formulario extends StatefulWidget {
 }
 
 class _FormularioState extends State<Formulario> {
- XFile? _image; // Variable para almacenar la imagen seleccionada
+late GoogleMapController controller;
+LatLng _markerPosition = const LatLng(0, 0);
+ XFile? _image;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _cellphoneController = TextEditingController();
+String _placename = '';
+String _locality = '';
+String _postalCode = '';
+String _country = '';
+
+
+
+  // Variable para almacenar la imagen seleccionada
  Future<void> _pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: source);
+
+
 
     setState(() {
       _image = image;
     });
  }
+
+ final LatLng _center = const LatLng(4.5709, -74.2973); //coordenadas de Colombia
+
+ void _onMapCreated(GoogleMapController controller) {
+ }
+
+Future<void> _getPlace(LatLng position) async {
+ try {
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+      position.latitude,
+      position.longitude,
+    );
+
+    Placemark place = placemarks[0];
+
+    setState(() {
+      _placename = place.name ?? '';
+      _locality = place.locality ?? '';
+      _postalCode = place.postalCode ?? '';
+      _country = place.country ?? '';
+      _markerPosition = position; // Actualiza la ubicación del marcador
+    });
+ } catch (e) {
+    // ignore: avoid_print
+    print(e);
+ }
+}
+ void _addRegister() {
+
+      Register newRegister = Register(
+        name: "Nombre",
+        nit: 123456789,
+        visitday: "2023-04-01",
+        image: _image,
+        address: "Dirección:$_placename, Localidad:$_locality, País:$_country",
+        email: _emailController.text,
+        cellphone: _cellphoneController.text, 
+      );
+
+      Provider.of<RegisterProvider>(context, listen: false).addRegister(newRegister);
+    
+ }
+
+
 
  
 Future<dynamic> options(BuildContext context) {
@@ -173,7 +234,9 @@ Future<dynamic> options(BuildContext context) {
 
   @override
   Widget build(BuildContext context) {
-    final registerForm = Provider.of<FormProvider>(context);
+
+    final formKey = GlobalKey<FormState>();
+  
     
     return SingleChildScrollView(
       child: Column(
@@ -181,14 +244,14 @@ Future<dynamic> options(BuildContext context) {
 
         const SizedBox(height: 15),
 
-        const Text('Foto del comercio', style: TextStyle(color: Color.fromARGB(255, 241, 111, 90) ),),
+        const Text('Foto del comercio:', style: TextStyle(color: Color.fromARGB(255, 241, 111, 90), fontSize: 15),),
 
 
         const SizedBox(height: 15),
         
         Container(
           height: 300,
-          width: 300, // Ajusta el tamaño según sea necesario
+          width: 300, 
           decoration: BoxDecoration(
             border: Border.all(
               color: const Color.fromARGB(255, 241, 111, 90),
@@ -205,7 +268,7 @@ Future<dynamic> options(BuildContext context) {
         Align(
           alignment: Alignment.centerRight,
           child: Padding(
-            padding: const EdgeInsets.only(top: 10.0), // Ajusta el padding según sea necesario
+            padding: const EdgeInsets.only(top: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -231,11 +294,81 @@ Future<dynamic> options(BuildContext context) {
           ),
         ),
 
-      const SizedBox( height: 20),
+      const SizedBox( height: 30),
 
+
+
+        const Text('Ubicación:', style: TextStyle(color: Color.fromARGB(255, 241, 111, 90), fontSize: 15),),
+
+        const SizedBox(height: 15),
+        
+
+   SizedBox(
+ height: 400, 
+ width: double.infinity, 
+ child: GoogleMap(
+    onMapCreated: _onMapCreated,
+    initialCameraPosition: CameraPosition(
+      target: _center,
+      zoom: 11.0,
+    ),
+    onTap: _getPlace,
+    markers: {
+      Marker(
+        markerId: const MarkerId('selectedLocation'),
+        position: _markerPosition,
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+      ),
+    },
+ ),
+),
+
+
+    const SizedBox(height: 15),
+
+Row(
+ children: [
+    const Text('Dirección:', style: TextStyle(fontWeight: FontWeight.bold)),
+    const SizedBox(width: 20),
+    Flexible(
+      child: Text(_placename),
+    ),
+ ],
+),
+Row(
+ children: [
+    const Text('Localidad:', style: TextStyle(fontWeight: FontWeight.bold)),
+    const SizedBox(width: 20),
+    Flexible(
+      child: Text(_locality),
+    ),
+ ],
+),
+Row(
+ children: [
+    const Text('Postal:', style: TextStyle(fontWeight: FontWeight.bold)),
+    const SizedBox(width: 20),
+    Flexible(
+      child: Text(_postalCode),
+    ),
+ ],
+),
+Row(
+ children: [
+    const Text('País:', style: TextStyle(fontWeight: FontWeight.bold)),
+    const SizedBox(width: 20),
+    Flexible(
+      child: Text(_country),
+    ),
+ ],
+),
+
+   const SizedBox(height: 30),
+
+       const Text('Información de contacto:', style: TextStyle(color: Color.fromARGB(255, 241, 111, 90), fontSize: 15),),
 
        Form(
-      key: registerForm.formKey,
+        key: formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
         children: [
@@ -244,15 +377,14 @@ Future<dynamic> options(BuildContext context) {
 
           TextFormField(
             autocorrect: false,
+            controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecorations.authInputDecoration(
               hintText: 'example@gmail.com',
-              labelText: 'Correo electrónico',
+              labelText: 'Correo electrónico *',
               prefixIcon: Icons.alternate_email_rounded
             ),
             // Realizamos la validación para que solo sean aceptados datos que luzcan como correo electrónicos
-
-            onChanged: (value) => registerForm.email =value,
             validator: (value) {
               String pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
               RegExp regExp  = RegExp(pattern);
@@ -267,16 +399,16 @@ Future<dynamic> options(BuildContext context) {
           const SizedBox( height: 20),
 
             TextFormField(
+            controller: _cellphoneController,
             autocorrect: false,
             keyboardType: TextInputType.phone,
             decoration: InputDecorations.authInputDecoration(
               hintText: 'Sólo números',
-              labelText: 'Número de teléfono',
+              labelText: 'Número de teléfono *',
               prefixIcon: Icons.call
             ),
             // Realizamos la validación para que solo sean aceptados datos que luzcan como correo electrónicos
 
-            onChanged: (value) => registerForm.cellphone =value,
               validator: (value) {
                 if (value != null && value.length == 10) return null;
                 return 'El número de teléfono debe tener 10 digitos'; 
@@ -303,6 +435,44 @@ Future<dynamic> options(BuildContext context) {
                  
                   
                   onPressed: (){
+
+
+                   if(_image !=null && _placename.isNotEmpty && formKey.currentState!.validate()){
+
+                      _addRegister();
+
+                       
+                       Navigator.push(
+                       context,
+                       MaterialPageRoute(builder: (context) => const ResultScreen()),
+                       );
+                   
+
+                   } else {
+
+                    
+
+                      showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: const Text('Todos los campos son obligatorios, por favor complétalos correctamente.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+
+
+                   }
 
                    
                   },

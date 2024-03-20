@@ -45,11 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
 
-    void _onDaySelected(DateTime day, DateTime focusedDay){
-    setState((){
-      today = day;
-    });
-  }
    
 
     return Scaffold(
@@ -119,10 +114,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       builder: (BuildContext context) {
                         final String formattedDate = DateFormat('dd/MM/yyyy').format(companyWithAppointment['appointmentDate']);
                         return AlertDialog(
-                          title: Text('Información importante'),
+                          title: const Text('Información importante'),
                           content: Text('Ya tienes una cita agendada para el $formattedDate'),
                           actions: <Widget>[
-                            TextButton(child: Text('Aceptar'),
+                            TextButton(child: const Text('Aceptar'),
                             onPressed: () {
                               Navigator.of(context).pop(); // Cierra el AlertDialog
                             },
@@ -153,6 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+// ignore: camel_case_types
 class _commentsForm extends StatelessWidget {
 
   @override
@@ -209,12 +205,14 @@ class _commentsForm extends StatelessWidget {
 
 }
 
+// ignore: camel_case_types
 class _calendar extends StatefulWidget {
 
   @override
   State<_calendar> createState() => _calendarState();
 }
 
+// ignore: camel_case_types
 class _calendarState extends State<_calendar> {
   void _onDaySelected(DateTime day, DateTime focusedDay){
     setState((){
@@ -230,32 +228,30 @@ class _calendarState extends State<_calendar> {
       children: [
         const Text("Agendamiento de cita"),
         const SizedBox(height: 10),
-        Container(
-          child: TableCalendar(
-            rowHeight: 50,
-            headerStyle: const HeaderStyle(formatButtonVisible: false),
-            availableGestures: AvailableGestures.all,
-            selectedDayPredicate: (day)=> isSameDay(day, today),
-            focusedDay: today,
-            firstDay: DateTime.utc(2010, 10, 16),
-            lastDay: DateTime.utc(2030, 3, 14),
-            //locale: 'es_CO',
-            onDaySelected: _onDaySelected,
-            calendarStyle:   const CalendarStyle(
+        TableCalendar(
+          rowHeight: 50,
+          headerStyle: const HeaderStyle(formatButtonVisible: false),
+          availableGestures: AvailableGestures.all,
+          selectedDayPredicate: (day)=> isSameDay(day, today),
+          focusedDay: today,
+          firstDay: DateTime.utc(2010, 10, 16),
+          lastDay: DateTime.utc(2030, 3, 14),
+          //locale: 'es_CO',
+          onDaySelected: _onDaySelected,
+          calendarStyle:   const CalendarStyle(
+            
+            todayDecoration:  BoxDecoration(
+              color: Color.fromARGB(255, 241, 111, 90), // Cambia este color según tus preferencias
+              shape: BoxShape.circle,
+            ),
+            selectedDecoration: BoxDecoration(
+              color: Color.fromARGB(255, 251, 44, 44),
+              shape: BoxShape.circle, // Asegúrate de que esta línea está presente
               
-              todayDecoration:  BoxDecoration(
-                color: Color.fromARGB(255, 241, 111, 90), // Cambia este color según tus preferencias
-                shape: BoxShape.circle,
-              ),
-              selectedDecoration: BoxDecoration(
-                color: Color.fromARGB(255, 251, 44, 44),
-                shape: BoxShape.circle, // Asegúrate de que esta línea está presente
-                
-               
-              )
-            ),
-            ),
-        )
+             
+            )
+          ),
+          )
         ],
     );
 

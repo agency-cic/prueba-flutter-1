@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 241, 111, 90)),
         useMaterial3: true,
       ),
-      home: const InputScreen(),
+      home: const HomeScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

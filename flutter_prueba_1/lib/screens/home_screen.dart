@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_prueba_1/screens/input_screen.dart';
 import 'package:flutter_prueba_1/ui/input_decorations.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:collection/collection.dart';
+
 
 
 class HomeScreen extends StatefulWidget {
@@ -15,14 +18,38 @@ class HomeScreen extends StatefulWidget {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController nitController = TextEditingController();
   DateTime today = DateTime.now();
-   final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
+
+  final List<DateTime> unavailableDates = [
+    DateTime.utc(2024, 3, 14),
+    DateTime.utc(2024, 3, 30),
+  ];
+
+  final List<Map<String, dynamic>> companiesWithAppointments = [
+ {
+    'name': 'Empresa A',
+    'nit': '123456789',
+    'appointmentDate': DateTime.utc(2024, 3, 14),
+ },
+ {
+    'name': 'Empresa B',
+    'nit': '12345',
+    'appointmentDate': DateTime.utc(2024, 3, 19),
+ }
+    
+];
+
   
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
 
-    
+    void _onDaySelected(DateTime day, DateTime focusedDay){
+    setState((){
+      today = day;
+    });
+  }
    
 
     return Scaffold(
@@ -71,10 +98,44 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed:(){
 
                 if (_formKey.currentState!.validate()){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const InputScreen()),);
-                }else{
-                  return null;
-                };
+                  if(unavailableDates.contains(today)){
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        key: UniqueKey(),
+                        content: const Text('Las fechas seleccionadas no están disponibles.'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );  
+                  }else{
+                    final String enteredName = nameController.text;
+                    final String enteredNit = nitController.text;
+                    final Map<String, dynamic>? companyWithAppointment = companiesWithAppointments.firstWhereOrNull(
+                      (company) => company['name'] == enteredName && company['nit'] == enteredNit,
+                    );
+
+                    if (companyWithAppointment != null) {
+                     showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        final String formattedDate = DateFormat('dd/MM/yyyy').format(companyWithAppointment['appointmentDate']);
+                        return AlertDialog(
+                          title: Text('Información importante'),
+                          content: Text('Ya tienes una cita agendada para el $formattedDate'),
+                          actions: <Widget>[
+                            TextButton(child: Text('Aceptar'),
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Cierra el AlertDialog
+                            },
+                            ),
+                          ],
+                        );
+                      },
+                      );
+                    }else{
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const InputScreen()));
+                    }
+                  }
+                }
 
               }, 
               child: const Padding(
@@ -198,7 +259,5 @@ class _calendarState extends State<_calendar> {
         ],
     );
 
-      
-    
   }
 }

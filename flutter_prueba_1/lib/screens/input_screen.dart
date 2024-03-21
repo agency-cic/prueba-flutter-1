@@ -33,9 +33,17 @@ class _InputScreenState extends State<InputScreen> {
         shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(50)),
         elevation: 0,
         toolbarHeight: 50,
-        title: const Text('Registro de Comercio', style: TextStyle(color: Colors.white, fontStyle: FontStyle.italic),),
+         title:  const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+             Text('Registro de Comercio', style: TextStyle(color: Colors.white, fontStyle: FontStyle.italic),),
+             Text('Secretaría de Salud', style: TextStyle(color: Colors.white, fontSize: 16)),
+            
+            ],
+          ),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 241, 111, 90),
+        backgroundColor: const Color.fromARGB(255, 0, 138, 189),
          leading: Container(
        
             width: 150, // Ancho del contenedor
@@ -197,13 +205,13 @@ Future<dynamic> options(BuildContext context) {
                  padding: const EdgeInsets.all(20),
                  decoration: const BoxDecoration(
                     border: Border(
-                      bottom: BorderSide(width: 1, color: Color.fromARGB(255, 241, 111, 90)),
+                      bottom: BorderSide(width: 1, color: Color.fromARGB(255, 0, 138, 189)),
                     ),
                  ),
                  child: const Row(
                     children: [
                       Expanded(child: Text('Tomar una foto')),
-                      Icon(Icons.camera_alt_outlined, color: Color.fromARGB(255, 241, 111, 90)),
+                      Icon(Icons.camera_alt_outlined, color:Color.fromARGB(255, 0, 138, 189)),
                     ],
                  ),
                 ),
@@ -218,13 +226,13 @@ Future<dynamic> options(BuildContext context) {
                  padding: const EdgeInsets.all(20),
                  decoration: const BoxDecoration(
                     border: Border(
-                      bottom: BorderSide(width: 1, color: Color.fromARGB(255, 241, 111, 90)),
+                      bottom: BorderSide(width: 1, color: Color.fromARGB(255, 0, 138, 189)),
                     ),
                  ),
                  child: const Row(
                     children: [
                       Expanded(child: Text('Seleccionar desde galería')),
-                      Icon(Icons.image, color: Color.fromARGB(255, 241, 111, 90)),
+                      Icon(Icons.image, color: Color.fromARGB(255, 0, 138, 189)),
                     ],
                  ),
                 ),
@@ -264,7 +272,7 @@ Future<dynamic> options(BuildContext context) {
 
         const SizedBox(height: 15),
 
-        const Text('Foto del comercio:', style: TextStyle(color: Color.fromARGB(255, 241, 111, 90), fontSize: 15),),
+        const Text('Foto del comercio:', style: TextStyle(color: Color.fromARGB(255, 0, 138, 189), fontSize: 15),),
 
 
         const SizedBox(height: 15),
@@ -274,7 +282,7 @@ Future<dynamic> options(BuildContext context) {
           width: 300, 
           decoration: BoxDecoration(
             border: Border.all(
-              color: const Color.fromARGB(255, 241, 111, 90),
+              color: const Color.fromARGB(255, 0, 138, 189),
               width: 1
             )
           ),
@@ -318,7 +326,7 @@ Future<dynamic> options(BuildContext context) {
 
 
 
-        const Text('Ubicación:', style: TextStyle(color: Color.fromARGB(255, 241, 111, 90), fontSize: 15),),
+        const Text('Ubicación:', style: TextStyle(color: Color.fromARGB(255, 0, 138, 189), fontSize: 15),),
 
         const SizedBox(height: 15),
         
@@ -360,7 +368,6 @@ Future<dynamic> options(BuildContext context) {
                       return null;
                     },
                  ),
-                 // Otros campos de texto para el primer formulario
                 ],
               ),
             ),
@@ -377,7 +384,7 @@ Future<dynamic> options(BuildContext context) {
 
    const SizedBox(height: 30),
 
-       const Text('Información de contacto:', style: TextStyle(color: Color.fromARGB(255, 241, 111, 90), fontSize: 15),),
+       const Text('Información de contacto:', style: TextStyle(color: Color.fromARGB(255, 0, 138, 189), fontSize: 15),),
 
        Form(
         key: _formKey2,
@@ -441,7 +448,7 @@ Future<dynamic> options(BuildContext context) {
                 padding: const EdgeInsets.all(10),
                 child: ElevatedButton(
                 style: ButtonStyle(
-                 backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 241, 111, 90)), 
+                 backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 0, 138, 189)), 
                  
                 ),
                  

@@ -51,10 +51,18 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(50)),
         elevation: 0,
-        toolbarHeight: 50,
-        title: const Text('Registro de Comercio', style: TextStyle(color: Colors.white, fontStyle: FontStyle.italic),),
+        toolbarHeight: 60,
+        title:  const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+             Text('Registro de Comercio', style: TextStyle(color: Colors.white, fontStyle: FontStyle.italic),),
+             Text('Secretaría de Salud', style: TextStyle(color: Colors.white, fontSize: 16)),
+            
+            ],
+          ),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 241, 111, 90),
+        backgroundColor: const Color.fromARGB(255, 0, 138, 189),
          leading: Container(
        
             width: 150, // Ancho del contenedor
@@ -88,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             ElevatedButton(
               style: ButtonStyle(
-                 backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 241, 111, 90)),
+                 backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 0, 138, 189)),
                 ),
               onPressed:(){
 
@@ -98,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       SnackBar(
                         key: UniqueKey(),
                         content: const Text('Las fechas seleccionadas no están disponibles.'),
-                        backgroundColor: Colors.red,
+                        backgroundColor: Colors.blue,
                       ),
                     );  
                   }else{
@@ -239,15 +247,15 @@ class _calendarState extends State<_calendar> {
           lastDay: DateTime.utc(2030, 3, 14),
           //locale: 'es_CO',
           onDaySelected: _onDaySelected,
-          calendarStyle:   const CalendarStyle(
+          calendarStyle:   CalendarStyle(
             
-            todayDecoration:  BoxDecoration(
-              color: Color.fromARGB(255, 241, 111, 90), // Cambia este color según tus preferencias
+            todayDecoration:  const BoxDecoration(
+              color: Color.fromARGB(255, 0, 138, 189),
               shape: BoxShape.circle,
             ),
             selectedDecoration: BoxDecoration(
-              color: Color.fromARGB(255, 251, 44, 44),
-              shape: BoxShape.circle, // Asegúrate de que esta línea está presente
+              color: Colors.blue.shade900,
+              shape: BoxShape.circle, 
               
              
             )

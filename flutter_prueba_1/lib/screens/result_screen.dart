@@ -20,9 +20,17 @@ class ResultScreen extends StatelessWidget {
         
         elevation: 0,
         toolbarHeight: 50,
-        title: const Text('Registro de Comercio', style: TextStyle(color: Colors.white, fontStyle: FontStyle.italic),),
+        title:   const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+             Text('Registro de Comercio', style: TextStyle(color: Colors.white, fontStyle: FontStyle.italic),),
+             Text('Secretaría de Salud', style: TextStyle(color: Colors.white, fontSize: 16)),
+            
+            ],
+          ),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 241, 111, 90),
+        backgroundColor: const Color.fromARGB(255, 0, 138, 189),
          leading: Container(
        
             width: 150, // Ancho del contenedor
@@ -54,13 +62,13 @@ class ResultScreen extends StatelessWidget {
           );
         },
         heroTag: null,
-        backgroundColor: const Color.fromARGB(255, 241, 111, 90),
+        backgroundColor: const Color.fromARGB(255, 0, 138, 189),
         child: const Icon(
           Icons.house_rounded, color: Colors.white
         ),
       ),
       body: ScreenWrapperResult(
-        headerColor: const Color.fromARGB(130, 241, 111, 90),
+        headerColor: const Color.fromARGB(255, 0, 138, 189),
         headerWidget: const HeaderText(),
         bodyWidget: Registros(registerProvider: registerProvider) ,
       )
@@ -195,7 +203,7 @@ class ListCard extends StatelessWidget {
         children: [
           Text(
             '$title: ',
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color:Color.fromARGB(255, 220, 69, 46) ),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color.fromARGB(255, 0, 138, 189)),
           ),
           Expanded(
             child: Text(

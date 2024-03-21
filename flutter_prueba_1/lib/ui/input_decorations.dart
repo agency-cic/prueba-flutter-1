@@ -13,13 +13,13 @@ class InputDecorations{
     return  InputDecoration(
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(
-                    color: Color.fromARGB(255, 241, 111, 90)
+                    color: Color.fromARGB(255, 0, 138, 189)
                   )
 
                 ),
                 focusedBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(
-                    color:  Color.fromARGB(255, 241, 111, 90),
+                    color:  Color.fromARGB(255, 0, 138, 189),
                     width: 2
                   )
                 ),
@@ -29,7 +29,7 @@ class InputDecorations{
                   color: Colors.grey
                 ),
                 prefixIcon: prefixIcon != null
-                ? Icon(prefixIcon, color:const Color.fromARGB(255, 241, 111, 90))
+                ? Icon(prefixIcon, color:const Color.fromARGB(255, 0, 138, 189))
                 :null
               );
   }
